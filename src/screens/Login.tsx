@@ -1,4 +1,4 @@
-// LoginSignupScreen.tsx
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
@@ -19,20 +19,48 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  const validate = () => {
+    let valid = true;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+    return valid;
+  };
 
   const handleAuth = async () => {
+    if (!validate()) return;
     setLoading(true);
-    if (isLogin) {
-      await signIn(email, password);
-    } else {
-      await signUp(email, password);
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+      } else {
+        await signUp(email, password);
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+      navigation.replace("Main");
     }
-    navigation.navigate("Main");
-    setLoading(false);
   };
 
   return (
-    <LinearGradient colors={["#141E30", "#243B55"]} style={styles.container}>
+    <LinearGradient colors={["#A4B465", "#3D8D7A"]} style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
           source={require("../../assets/logo.png")}
@@ -45,30 +73,61 @@ const Login: React.FC = () => {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#ccc"
+          placeholderTextColor="#eee"
+          cursorColor={"#3A7D44"}
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            if (emailError) setEmailError("");
+          }}
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#ccc"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#fff" style={styles.loader} />
-        ) : (
-          <TouchableOpacity style={styles.authButton} onPress={handleAuth}>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={[styles.input, { paddingRight: 40 }]} // extra right padding for the icon
+            placeholder="Password"
+            placeholderTextColor="#eee"
+            value={password}
+            cursorColor={"#3A7D44"}
+            autoCapitalize="none"
+            onChangeText={(text) => {
+              setPassword(text);
+              if (passwordError) setPasswordError("");
+            }}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword((prev) => !prev)}
+          >
+            <Ionicons
+              name={showPassword ? "eye" : "eye-off"}
+              size={24}
+              color="#eee"
+            />
+          </TouchableOpacity>
+        </View>
+        {passwordError ? (
+          <Text style={styles.errorText}>{passwordError}</Text>
+        ) : null}
+
+        <TouchableOpacity style={styles.authButton} onPress={handleAuth}>
+          <View style={styles.buttonContent}>
             <Text style={styles.authButtonText}>
               {isLogin ? "Login" : "Sign Up"}
             </Text>
-          </TouchableOpacity>
-        )}
+            {loading && (
+              <ActivityIndicator
+                size="small"
+                color="#0072ff"
+                style={styles.buttonLoader}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setIsLogin((prev) => !prev)}
@@ -115,7 +174,17 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     fontSize: 16,
     color: "#fff",
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  passwordContainer: {
+    position: "relative",
+    marginBottom: 10,
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 10,
+    top: "40%",
+    transform: [{ translateY: -12 }],
   },
   authButton: {
     backgroundColor: "#fff",
@@ -124,10 +193,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   authButtonText: {
-    color: "#243B55",
+    color: "#1B4D3E",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  buttonLoader: {
+    marginLeft: 10,
   },
   switchContainer: {
     marginTop: 20,
@@ -137,8 +213,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  loader: {
-    marginVertical: 20,
+  errorText: {
+    color: "#ff6b6b",
+    marginBottom: 10,
+    marginLeft: 10,
   },
 });
 
