@@ -8,8 +8,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Search from "../screens/Search";
 import Login from "../screens/Login";
 import CameraScreen from "../screens/Camera";
+import { User } from "@firebase/auth";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+type MainProps = {
+  user: User | null;
+};
 
 const TabNavigator = () => {
   return (
@@ -63,10 +68,10 @@ const TabNavigator = () => {
   );
 };
 
-const Main = () => {
+const Main = ({ user }: MainProps) => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName={user ? "Main" : "Login"}>
         <Stack.Screen
           name="Main"
           component={TabNavigator}
