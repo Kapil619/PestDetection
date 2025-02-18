@@ -122,7 +122,7 @@ const Login: React.FC = () => {
             {loading && (
               <ActivityIndicator
                 size="small"
-                color="#0072ff"
+                color="#3D8D7A"
                 style={styles.buttonLoader}
               />
             )}

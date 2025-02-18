@@ -68,7 +68,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <LinearGradient colors={["#00c6ff", "#0072ff"]} style={styles.container}>
+    <LinearGradient colors={["#A4B465", "#3D8D7A"]} style={styles.container}>
       <Animated.View
         style={[
           styles.content,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   buttonText: {
-    color: "#0072ff",
+    color: "#1B4D3E",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -176,23 +176,24 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#0072ff",
+    color: "#1B4D3E",
     marginBottom: 10,
   },
   cardContent: {
     fontSize: 16,
-    color: "#333",
+    color: "#1B4D3E",
+
     textAlign: "center",
     marginBottom: 10,
   },
   cardButton: {
-    backgroundColor: "#0072ff",
+    backgroundColor: "#A4B465",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 20,
   },
   cardButtonText: {
-    color: "#fff",
+    color: "black",
     fontSize: 14,
     fontWeight: "600",
   },

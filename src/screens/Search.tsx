@@ -98,13 +98,13 @@ const Search: React.FC = () => {
   );
 
   return (
-    <LinearGradient colors={["#0072ff", "#00c6ff"]} style={styles.container}>
+    <LinearGradient colors={["#A4B465", "#3D8D7A"]} style={styles.container}>
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Search pests..."
-            placeholderTextColor="#ccc"
+            placeholderTextColor="black"
             value={searchQuery}
             onChangeText={setSearchQuery}
             style={styles.searchInput}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   searchButtonText: {
-    color: "#0072ff",
+    color: "#1B4D3E",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#0072ff",
+    color: "#1B4D3E",
   },
   itemSubtitle: {
     fontSize: 16,

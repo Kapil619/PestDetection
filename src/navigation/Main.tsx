@@ -1,14 +1,14 @@
+import { Ionicons } from "@expo/vector-icons";
+import { User } from "@firebase/auth";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
-import Home from "../screens/Home";
-import Profile from "../screens/Profile";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Search from "../screens/Search";
-import Login from "../screens/Login";
 import CameraScreen from "../screens/Camera";
-import { User } from "@firebase/auth";
+import Home from "../screens/Home";
+import Login from "../screens/Login";
+import Profile from "../screens/Profile";
+import Search from "../screens/Search";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +21,11 @@ const TabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "#D0DDD0",
+          height: 40,
+        },
         tabBarIcon: ({
           focused,
           color,
@@ -41,7 +46,7 @@ const TabNavigator = () => {
           return (
             <Ionicons
               name={iconName}
-              size={size}
+              size={28}
               color={focused ? "green" : color}
             />
           );
