@@ -51,11 +51,11 @@ const Login: React.FC = () => {
       } else {
         await signUp(email, password);
       }
+      navigation.replace("Main");
     } catch (error: any) {
       alert(error.message);
     } finally {
       setLoading(false);
-      navigation.replace("Main");
     }
   };
 
