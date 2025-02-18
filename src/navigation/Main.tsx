@@ -7,6 +7,7 @@ import Profile from "../screens/Profile";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Search from "../screens/Search";
 import Login from "../screens/Login";
+import CameraScreen from "../screens/Camera";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -76,6 +77,13 @@ const Main = () => {
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Camera"
+          component={CameraScreen}
           options={{
             headerShown: false,
           }}

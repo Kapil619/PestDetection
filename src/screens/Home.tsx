@@ -1,4 +1,5 @@
 // Home.tsx
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef } from "react";
 import {
@@ -14,6 +15,7 @@ import {
 const { width } = Dimensions.get("window");
 
 const Home: React.FC = () => {
+  const navigation = useNavigation<any>();
   // Animated values for fade-in and slide-up effects.
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current; // starts 50px lower
@@ -54,6 +56,7 @@ const Home: React.FC = () => {
 
   // Handle the capture button press (e.g., navigate to camera or capture action)
   const onCapturePress = () => {
+    navigation.navigate("Camera");
     console.log("Capture button pressed");
     // TODO: Navigate to camera or trigger image capture functionality.
   };
