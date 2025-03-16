@@ -38,10 +38,14 @@ const Profile: React.FC = () => {
           style={styles.avatar}
           resizeMode="cover"
         />
-        <Text style={styles.name}>{user?.displayName || "Atharva Shine"}</Text>
-        <Text style={styles.email}>{user?.email || "sunshine@gmail.com"}</Text>
+        <Text style={styles.name}>
+          {user?.displayName || "Pest identification"}
+        </Text>
+        <Text style={styles.email}>
+          {user?.email || "pestdentification@gmail.com"}
+        </Text>
         {/* Sample statistics row */}
-        <View style={styles.infoRow}>
+        {/* <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <Text style={styles.infoValue}>10</Text>
             <Text style={styles.infoLabel}>Posts</Text>
@@ -54,7 +58,7 @@ const Profile: React.FC = () => {
             <Text style={styles.infoValue}>180</Text>
             <Text style={styles.infoLabel}>Following</Text>
           </View>
-        </View>
+        </View> */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
