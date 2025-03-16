@@ -55,6 +55,38 @@ const dummyData: Pest[] = [
     image:
       "https://media.istockphoto.com/id/912267238/photo/rhynchophorus-ferrugineus-red-palm-weevil-close-up.jpg?s=612x612&w=0&k=20&c=fwJMuC1h_8sf0ha482FQKpgZ88MgIgfFobfRxv13a58=",
   },
+  {
+    id: "5",
+    name: "Caterpillar",
+    class: "Insect",
+    description: "Larval stage of butterflies, often feeding on leaves.",
+    image:
+      "https://media.istockphoto.com/id/1226625766/photo/hairy-caterpillar-before-turning-into-a-beautiful-butterfly.jpg?s=612x612&w=0&k=20&c=eMxH0ZVZM3IEKEX3v1JAl6BL3Axi8sH6re-_FRAijZM=",
+  },
+  {
+    id: "6",
+    name: "Whitefly",
+    class: "Insect",
+    description: "White-winged sap-sucking insects found on plant leaves.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuLfbnsyV_UY6tNjXml7kPxLMocH02dc5MBA&s",
+  },
+  {
+    id: "7",
+    name: "Grasshopper",
+    class: "Insect",
+    description: "Orthopteran insects known for jumping & plant damage.",
+    image:
+      "https://media.istockphoto.com/id/157580232/photo/a-bright-green-grasshopper-on-an-leaf.jpg?s=612x612&w=0&k=20&c=jcFfL26l-qV2iRdXOMgkobNn4IGa27Itj6FI8CqFELQ=",
+  },
+  {
+    id: "8",
+    name: "Thrips",
+    class: "Insect",
+    description: "Insects with fringed wings, damaging flower buds.",
+    image:
+      "https://media.istockphoto.com/id/1341890740/photo/the-onion-the-potato-the-tobacco-or-the-cotton-seedling-thrips-thrips-tabaci-it-is-important.jpg?s=612x612&w=0&k=20&c=pR8aLftQd_vu-cygZoFM4bPOQbaR0PYqYN7zcTeh6pQ=",
+  },
 ];
 
 const { width } = Dimensions.get("window");
