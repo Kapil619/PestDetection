@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import { Camera, CameraView } from "expo-camera";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   Image,
   StyleSheet,
@@ -11,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { CameraScreenNavigationProp } from "../utils/types";
 
 const { width } = Dimensions.get("window");
 
@@ -19,7 +22,7 @@ const CameraScreen: React.FC = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const cameraRef = useRef<CameraView>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<CameraScreenNavigationProp>();
   const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     (async () => {
@@ -43,6 +46,54 @@ const CameraScreen: React.FC = () => {
       } catch (error) {
         console.log("Failed to take picture:", error);
       }
+    }
+  };
+
+  const handleConfirm = async () => {
+    if (!capturedPhoto) return;
+    setIsProcessing(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: capturedPhoto,
+        name: "test.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      const response = await axios.post(
+        "http://192.168.1.17:5000/predict",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      console.log("Response:", response.data);
+
+      // Filter detections, same as in Home.tsx
+      const detectedPests = response.data.detections
+        .filter((det: any) => det.confidence >= 0.4)
+        .map((det: any) => ({
+          label: det.label,
+          confidence: det.confidence,
+        }));
+
+      if (detectedPests.length === 0) {
+        Alert.alert("No pest detected!");
+      } else {
+        console.log("Pests detected:", detectedPests);
+      }
+      navigation.navigate("Main", {
+        screen: "Home",
+        params: {
+          photoUri: capturedPhoto,
+          detectedPests,
+        },
+      });
+
+      setCapturedPhoto(null);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      Alert.alert("Error", "Image upload failed");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -102,10 +153,7 @@ const CameraScreen: React.FC = () => {
           <View style={styles.previewButtons}>
             <TouchableOpacity
               style={styles.acceptButton}
-              onPress={() => {
-                console.log("Photo accepted:", capturedPhoto);
-                navigation.goBack();
-              }}
+              onPress={handleConfirm}
             >
               <Text style={styles.acceptText}>Confirm </Text>
             </TouchableOpacity>

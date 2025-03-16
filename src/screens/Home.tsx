@@ -1,6 +1,6 @@
 // Home.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,14 +17,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { HomeScreenRouteProp } from "../utils/types";
 const { width } = Dimensions.get("window");
 const Home: React.FC = () => {
   const navigation = useNavigation<any>();
-  // Animated values for fade-in and slide-up effects.
+  const route = useRoute<HomeScreenRouteProp>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current; // starts 50px lower
-  // Animation for button press scaling
   const buttonScale1 = useRef(new Animated.Value(1)).current;
   const buttonScale2 = useRef(new Animated.Value(1)).current;
 
@@ -48,6 +47,13 @@ const Home: React.FC = () => {
       }),
     ]).start();
   }, [fadeAnim, slideAnim]);
+
+  useEffect(() => {
+    if (route.params?.photoUri) {
+      setUploadedImageUri(route.params.photoUri);
+      setDetections(route.params.detectedPests || []);
+    }
+  }, [route.params]);
 
   // Handle button press in/out animations
   const onButton1PressIn = () => {
@@ -158,7 +164,6 @@ const Home: React.FC = () => {
               { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
             ]}
           >
-            {/* A thematic image for your app */}
             <Image
               source={require("../../assets/guard.png")}
               style={styles.image}
