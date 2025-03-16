@@ -51,6 +51,13 @@ export default {
           recordAudioAndroid: true,
         },
       ],
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "PestIdentification wants to accesses your photos to capture the images.",
+        },
+      ],
     ],
     runtimeVersion: {
       policy: "appVersion",
