@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
@@ -26,7 +27,7 @@ const Home: React.FC = () => {
   const slideAnim = useRef(new Animated.Value(50)).current; // starts 50px lower
   const buttonScale1 = useRef(new Animated.Value(1)).current;
   const buttonScale2 = useRef(new Animated.Value(1)).current;
-
+  const [loading, setLoading] = useState(false);
   const [uploadedImageUri, setUploadedImageUri] = useState<string | null>(null);
   const [detections, setDetections] = useState<
     { label: string; confidence: number }[]
@@ -151,6 +152,29 @@ const Home: React.FC = () => {
     setDetections([]);
   };
 
+  const handleRobotCapture = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("http://192.168.1.38:5001/capture");
+      console.log("Response:", response.data);
+      const detectedPests = response.data.detections
+        .filter((det: any) => det.confidence >= 0.4)
+        .map((det: any) => ({
+          label: det.label,
+          confidence: det.confidence,
+        }));
+
+      const uniqueImageUrl = `${
+        response.data.image_url
+      }?t=${new Date().getTime()}`;
+      setDetections(detectedPests);
+      setUploadedImageUri(uniqueImageUrl);
+    } catch (error) {
+      console.error("Error capturing image:", error);
+    }
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -198,6 +222,11 @@ const Home: React.FC = () => {
                     <Text style={styles.buttonText}>Upload Image</Text>
                   </Pressable>
                 </Animated.View>
+
+                <Pressable onPress={handleRobotCapture} style={styles.button}>
+                  <Text style={styles.buttonText}>Robot Capture</Text>
+                  {loading && <ActivityIndicator color="#1B4D3E" />}
+                </Pressable>
               </>
             )}
             {uploadedImageUri && (
@@ -337,6 +366,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
+    flexDirection: "row",
+    gap: 6,
   },
   buttonText: {
     color: "#1B4D3E",
