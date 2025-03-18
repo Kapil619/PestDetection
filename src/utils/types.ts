@@ -22,3 +22,8 @@ export type CameraScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
     "Camera"
 >;
+
+export interface Detection {
+    label: string;
+    confidence: number;
+}
