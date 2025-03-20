@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import { Camera, CameraView } from "expo-camera";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { predictImage } from "../utils/pestService";
 import { CameraScreenNavigationProp } from "../utils/types";
 
 const { width } = Dimensions.get("window");
@@ -53,28 +53,7 @@ const CameraScreen: React.FC = () => {
     if (!capturedPhoto) return;
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append("image", {
-        uri: capturedPhoto,
-        name: "test.jpg",
-        type: "image/jpeg",
-      } as any);
-
-      const response = await axios.post(
-        "http://192.168.1.17:5000/predict",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      console.log("Response:", response.data);
-
-      // Filter detections, same as in Home.tsx
-      const detectedPests = response.data.detections
-        .filter((det: any) => det.confidence >= 0.4)
-        .map((det: any) => ({
-          label: det.label,
-          confidence: det.confidence,
-        }));
-
+      const detectedPests = await predictImage(capturedPhoto);
       if (detectedPests.length === 0) {
         Alert.alert("No pest detected!");
       } else {
@@ -87,7 +66,6 @@ const CameraScreen: React.FC = () => {
           detectedPests,
         },
       });
-
       setCapturedPhoto(null);
     } catch (error) {
       console.error("Upload failed:", error);

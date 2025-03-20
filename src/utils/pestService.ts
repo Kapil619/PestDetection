@@ -53,3 +53,35 @@ export async function robotCaptureService(): Promise<{
         throw error;
     }
 }
+
+export async function predictImage(uri: string): Promise<Detection[]> {
+    try {
+        const formData = new FormData();
+        formData.append("image", {
+            uri,
+            name: "test.jpg",
+            type: "image/jpeg",
+        } as any);
+
+        const response = await axios.post("http://192.168.1.33:5000/predict", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("predictImage Response:", response.data);
+
+        const detectedPests = response.data.detections
+            .filter((det: any) => det.confidence >= 0.4)
+            .map((det: any) => ({
+                label: det.label,
+                confidence: det.confidence,
+            }));
+
+        if (detectedPests.length === 0) {
+            Alert.alert("No pest detected!");
+        }
+        return detectedPests;
+    } catch (error) {
+        console.error("Predict image failed:", error);
+        Alert.alert("Error", "Image prediction failed");
+        throw error;
+    }
+}
