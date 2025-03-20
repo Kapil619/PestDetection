@@ -12,7 +12,7 @@ export async function uploadImageService(uri: string): Promise<Detection[]> {
             type: "image/jpeg",
         } as any);
 
-        const response = await axios.post("http://192.168.1.38:5000/predict", formData, {
+        const response = await axios.post("http://192.168.1.12:5000/predict", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -38,7 +38,7 @@ export async function robotCaptureService(): Promise<{
     imageUrl: string;
 }> {
     try {
-        const response = await axios.post("http://192.168.1.38:5001/capture");
+        const response = await axios.post("http://192.168.1.12:5001/capture");
         const data = response.data;
         console.log("robotCaptureService Response:", data);
 

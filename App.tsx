@@ -33,7 +33,7 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Main user={user} />
-      <StatusBar style="auto" />
+      <StatusBar backgroundColor="#A4B465" />
     </SafeAreaView>
   );
 }
