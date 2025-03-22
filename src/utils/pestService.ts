@@ -2,6 +2,16 @@ import axios from "axios";
 import { Alert } from "react-native";
 import { Detection } from "./types";
 
+export let uploadBaseUrl = "http://192.168.1.12:5000";
+export let captureBaseUrl = "http://192.168.1.12:5001";
+
+
+export function setUploadBaseUrl(urlDigits: string) {
+    uploadBaseUrl = "http://" + urlDigits;
+}
+export function setCaptureBaseUrl(urlDigits: string) {
+    captureBaseUrl = "http://" + urlDigits;
+}
 
 export async function uploadImageService(uri: string): Promise<Detection[]> {
     try {
@@ -12,7 +22,7 @@ export async function uploadImageService(uri: string): Promise<Detection[]> {
             type: "image/jpeg",
         } as any);
 
-        const response = await axios.post("http://192.168.1.12:5000/predict", formData, {
+        const response = await axios.post(`${uploadBaseUrl}/predict`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -28,7 +38,7 @@ export async function uploadImageService(uri: string): Promise<Detection[]> {
         return detectedPests;
     } catch (error) {
         console.error("Upload failed:", error);
-        Alert.alert("Error", "Image upload failed");
+        Alert.alert("Error", "Please configure the URL properly.");
         throw error;
     }
 }
@@ -38,7 +48,7 @@ export async function robotCaptureService(): Promise<{
     imageUrl: string;
 }> {
     try {
-        const response = await axios.post("http://192.168.1.12:5001/capture");
+        const response = await axios.post(`${captureBaseUrl}/capture`);
         const data = response.data;
         console.log("robotCaptureService Response:", data);
 
@@ -49,7 +59,8 @@ export async function robotCaptureService(): Promise<{
         const uniqueImageUrl = `${data.image_url}?t=${new Date().getTime()}`;
         return { detections, imageUrl: uniqueImageUrl };
     } catch (error) {
-        console.error("Error capturing image:", error);
+        console.error("Error", "Please configure the URL properly.", error);
+        Alert.alert("Error", "Please configure the URL properly.");
         throw error;
     }
 }
@@ -63,7 +74,7 @@ export async function predictImage(uri: string): Promise<Detection[]> {
             type: "image/jpeg",
         } as any);
 
-        const response = await axios.post("http://192.168.1.33:5000/predict", formData, {
+        const response = await axios.post(`${uploadBaseUrl}/predict`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("predictImage Response:", response.data);
@@ -81,7 +92,7 @@ export async function predictImage(uri: string): Promise<Detection[]> {
         return detectedPests;
     } catch (error) {
         console.error("Predict image failed:", error);
-        Alert.alert("Error", "Image prediction failed");
+        Alert.alert("Error", "Please configure the URL properly.");
         throw error;
     }
 }

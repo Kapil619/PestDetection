@@ -1,5 +1,6 @@
 // Home.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,15 +9,23 @@ import {
   Alert,
   Animated,
   Image,
+  Modal,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../components/AppButton";
 import { homeStyles } from "../styles/homeStyles";
-import { robotCaptureService, uploadImageService } from "../utils/pestService";
+import {
+  robotCaptureService,
+  setCaptureBaseUrl,
+  setUploadBaseUrl,
+  uploadImageService,
+} from "../utils/pestService";
 import { HomeScreenRouteProp } from "../utils/types";
 const Home: React.FC = () => {
   const navigation = useNavigation<any>();
@@ -28,6 +37,20 @@ const Home: React.FC = () => {
   const [detections, setDetections] = useState<
     { label: string; confidence: number }[]
   >([]);
+  const [apiModalVisible, setApiModalVisible] = useState(false);
+  const [newAppUrl, setNewAppUrl] = useState("");
+  const [newCaptureUrl, setNewCaptureUrl] = useState("");
+
+  const updateApiUrls = () => {
+    // If a new App URL is provided, update uploadBaseUrl.
+    if (newAppUrl.trim() !== "") {
+      setUploadBaseUrl(newAppUrl);
+    }
+    if (newCaptureUrl.trim() !== "") {
+      setCaptureBaseUrl(newCaptureUrl);
+    }
+    setApiModalVisible(false);
+  };
 
   useEffect(() => {
     // Parallel animation: fading in and sliding up
@@ -133,8 +156,113 @@ const Home: React.FC = () => {
                   onPress={handleRobotCapture}
                   loading={loading}
                 />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#A4B465",
+                    padding: 8,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 25,
+                  }}
+                  onPress={() => setApiModalVisible(true)}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#fff",
+                      padding: 5,
+                      borderRadius: 50,
+                      marginRight: 10,
+                    }}
+                  >
+                    <SimpleLineIcons name="wrench" size={24} color="black" />
+                  </View>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    Configure URL
+                  </Text>
+                </TouchableOpacity>
               </>
             )}
+            <Modal visible={apiModalVisible} transparent animationType="slide">
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    padding: 20,
+                    borderRadius: 10,
+                    width: "80%",
+                    position: "relative",
+                  }}
+                >
+                  {/* Close Icon */}
+                  <Pressable
+                    onPress={() => setApiModalVisible(false)}
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    <Ionicons name="close-circle" size={30} color="#A4B465" />
+                  </Pressable>
+
+                  <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
+                    Configure API URLs
+                  </Text>
+
+                  <Text style={{ marginBottom: 5 }}>App API (/predict):</Text>
+                  <TextInput
+                    value={newAppUrl}
+                    onChangeText={setNewAppUrl}
+                    placeholder="e.g. 192.168.1.35:5000"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#ccc",
+                      padding: 8,
+                      marginBottom: 20,
+                    }}
+                  />
+
+                  <Text style={{ marginBottom: 5 }}>
+                    Capture API: (/capture)
+                  </Text>
+                  <TextInput
+                    value={newCaptureUrl}
+                    onChangeText={setNewCaptureUrl}
+                    placeholder="e.g. 192.168.1.12:5001"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#ccc",
+                      padding: 8,
+                      marginBottom: 20,
+                    }}
+                  />
+
+                  <TouchableOpacity
+                    onPress={updateApiUrls}
+                    style={{
+                      backgroundColor: "#A4B465",
+                      padding: 10,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text style={{ textAlign: "center", color: "#fff" }}>
+                      Save
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
             {uploadedImageUri && (
               <View style={homeStyles.uploadContainer}>
                 <View style={homeStyles.imageWrapper}>
