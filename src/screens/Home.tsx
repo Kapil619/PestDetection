@@ -156,6 +156,12 @@ const Home: React.FC = () => {
                   onPress={handleRobotCapture}
                   loading={loading}
                 />
+                <AppButton
+                  text="Show Live Feed"
+                  onPress={() => {
+                    navigation.navigate("LiveFeed");
+                  }}
+                />
                 <TouchableOpacity
                   style={{
                     backgroundColor: "#A4B465",

@@ -3,7 +3,9 @@ import { Alert } from "react-native";
 import { Detection } from "./types";
 
 export let uploadBaseUrl = "http://192.168.1.12:5000";
-export let captureBaseUrl = "http://192.168.1.12:5001";
+export let captureBaseUrl = "http://192.168.1.34:5001";
+export const liveFeedUrl = "http://192.168.1.34:5001/video_feed";
+
 
 
 export function setUploadBaseUrl(urlDigits: string) {

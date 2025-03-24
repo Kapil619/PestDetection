@@ -9,6 +9,7 @@ import Home from "../screens/Home";
 import Login from "../screens/Login";
 import Profile from "../screens/Profile";
 import Search from "../screens/Search";
+import LiveFeed from "../screens/feed";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -94,6 +95,13 @@ const Main = ({ user }: MainProps) => {
         <Stack.Screen
           name="Camera"
           component={CameraScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="LiveFeed"
+          component={LiveFeed}
           options={{
             headerShown: false,
           }}
