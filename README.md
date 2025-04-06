@@ -49,15 +49,21 @@ cd pest-detection
 npm install
 ```
 
-3. Set up environment variables:
+3. Create a .env file in the root directory with your Firebase configuration:
 ```bash
-cp .env.example .env
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_STORAGE_BUCKET=your_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+FIREBASE_APP_ID=your_app_id
+FIREBASE_DATABASE_URL=your_database_url
 # Add your Firebase configuration
 ```
 
 4. Start the development server:
 ```bash
-npm start
+npx expo start
 ```
 
 ## 🔌 API Integration
