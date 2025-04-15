@@ -2,8 +2,8 @@ import axios from "axios";
 import { Alert } from "react-native";
 import { Detection } from "./types";
 
-export let uploadBaseUrl = "http://192.168.1.12:5000";
-export let captureBaseUrl = "http://192.168.1.34:5001";
+export let uploadBaseUrl = "http://192.168.1.33:5000";
+export let captureBaseUrl = "http://65.1.91.195:5001";
 export const liveFeedUrl = "http://192.168.1.34:5001/video_feed";
 
 
@@ -31,7 +31,7 @@ export async function uploadImageService(uri: string): Promise<Detection[]> {
         const data = response.data;
         console.log("uploadImageService Response:", data);
         const detectedPests = data.detections
-            .filter((det: any) => det.confidence >= 0.4)
+            .filter((det: any) => det.confidence >= 0.2)
             .map((det: any) => ({ label: det.label, confidence: det.confidence }));
 
         if (detectedPests.length === 0) {

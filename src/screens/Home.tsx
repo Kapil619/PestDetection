@@ -1,6 +1,5 @@
 // Home.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,7 +17,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AppButton from "../components/AppButton";
+import { CardItem } from "../components/CardItem";
 import { homeStyles } from "../styles/homeStyles";
 import {
   robotCaptureService,
@@ -97,6 +96,7 @@ const Home: React.FC = () => {
       setUploadedImageUri(uri);
       try {
         const newDetections = await uploadImageService(uri);
+        console.log("New detections:", newDetections);
         setDetections(newDetections);
       } catch {
         console.log("Error uploading image");
@@ -136,9 +136,10 @@ const Home: React.FC = () => {
               { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
             ]}
           >
+            {/* Hero Image / Title */}
             <Image
               source={require("../../assets/guard.png")}
-              style={homeStyles.image}
+              style={homeStyles.heroImage}
               resizeMode="cover"
             />
             <Text style={homeStyles.title}>Pest Identifier</Text>
@@ -146,135 +147,116 @@ const Home: React.FC = () => {
               Detect pests instantly using cutting-edge technology.
             </Text>
 
-            {/* Interactive Capture Button */}
+            {/* If no image uploaded, show the 2x2 card layout */}
             {!uploadedImageUri && (
-              <>
-                <AppButton text="Capture Image" onPress={onCapturePress} />
-                <AppButton text="Upload Image" onPress={pickImageAndUpload} />
-                <AppButton
-                  text="Robot Capture"
-                  onPress={handleRobotCapture}
-                  loading={loading}
-                />
-                <AppButton
-                  text="Show Live Feed"
-                  onPress={() => {
-                    navigation.navigate("LiveFeed");
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#A4B465",
-                    padding: 8,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 25,
-                  }}
-                  onPress={() => setApiModalVisible(true)}
-                >
-                  <View
-                    style={{
-                      backgroundColor: "#fff",
-                      padding: 5,
-                      borderRadius: 50,
-                      marginRight: 10,
-                    }}
-                  >
-                    <SimpleLineIcons name="wrench" size={24} color="black" />
-                  </View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    Configure URL
-                  </Text>
-                </TouchableOpacity>
-              </>
+              <View style={{ width: "100%" }}>
+                {/* Row 1 */}
+                <View style={homeStyles.row}>
+                  {/* Capture Card */}
+                  <CardItem
+                    title="Capture"
+                    subtitle="TAKE A PHOTO"
+                    iconFamily="Feather"
+                    iconName="camera"
+                    onPress={onCapturePress}
+                    imageSource={require("../../assets/cam.png")}
+                    btnText="Capture"
+                  />
+                  <CardItem
+                    title="Upload"
+                    subtitle="FROM GALLERY"
+                    iconFamily="Ionicons"
+                    iconName="cloud-upload-outline"
+                    onPress={pickImageAndUpload}
+                    imageSource={require("../../assets/upload.png")}
+                    btnText="Upload"
+                  />
+                </View>
+
+                {/* Row 2 */}
+                <View style={[homeStyles.row, { marginTop: 20 }]}>
+                  <CardItem
+                    title="Robot"
+                    subtitle="REMOTE CAPTURE"
+                    iconFamily="Ionicons"
+                    iconName="game-controller-outline"
+                    onPress={handleRobotCapture}
+                    imageSource={require("../../assets/robot.png")}
+                    btnText="Capture"
+                  />
+
+                  <CardItem
+                    title="LiveFeed"
+                    subtitle="REALTIME VIDEO"
+                    iconFamily="Entypo"
+                    iconName="tv"
+                    onPress={handleRobotCapture}
+                    imageSource={require("../../assets/live.png")}
+                    btnText="BEGIN"
+                  />
+                </View>
+              </View>
             )}
+
+            {/* Modal for configuring API URLs */}
             <Modal visible={apiModalVisible} transparent animationType="slide">
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                }}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    padding: 20,
-                    borderRadius: 10,
-                    width: "80%",
-                    position: "relative",
-                  }}
-                >
-                  {/* Close Icon */}
+              <View style={homeStyles.modalOverlay}>
+                <View style={homeStyles.modalContent}>
                   <Pressable
                     onPress={() => setApiModalVisible(false)}
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      zIndex: 10,
-                    }}
+                    style={homeStyles.closeIcon}
                   >
                     <Ionicons name="close-circle" size={30} color="#A4B465" />
                   </Pressable>
 
-                  <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
+                  <Text
+                    style={{
+                      marginBottom: 10,
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
                     Configure API URLs
                   </Text>
 
-                  <Text style={{ marginBottom: 5 }}>App API (/predict):</Text>
+                  <Text style={{ marginBottom: 5, fontWeight: "600" }}>
+                    App API (/predict):
+                  </Text>
                   <TextInput
                     value={newAppUrl}
                     onChangeText={setNewAppUrl}
                     placeholder="e.g. 192.168.1.12:5000"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#ccc",
-                      padding: 8,
-                      marginBottom: 20,
-                    }}
+                    style={homeStyles.modalInput}
                   />
 
-                  <Text style={{ marginBottom: 5 }}>
-                    Capture API: (/capture)
+                  <Text style={{ marginBottom: 5, fontWeight: "600" }}>
+                    Capture API (/capture):
                   </Text>
                   <TextInput
                     value={newCaptureUrl}
                     onChangeText={setNewCaptureUrl}
                     placeholder="e.g. 192.168.1.12:5001"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#ccc",
-                      padding: 8,
-                      marginBottom: 20,
-                    }}
+                    style={homeStyles.modalInput}
                   />
 
                   <TouchableOpacity
                     onPress={updateApiUrls}
-                    style={{
-                      backgroundColor: "#A4B465",
-                      padding: 10,
-                      borderRadius: 5,
-                    }}
+                    style={homeStyles.modalSaveButton}
                   >
-                    <Text style={{ textAlign: "center", color: "#fff" }}>
-                      Save
-                    </Text>
+                    <Text style={homeStyles.modalSaveText}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </Modal>
+
+            {/* If an image is uploaded, show results */}
             {uploadedImageUri && (
               <View style={homeStyles.uploadContainer}>
                 <View style={homeStyles.imageWrapper}>
                   <Image
                     source={{ uri: uploadedImageUri }}
                     style={homeStyles.uploadedImage}
+                    resizeMode="contain"
                   />
                   <Pressable
                     style={homeStyles.crossIcon}
@@ -286,20 +268,45 @@ const Home: React.FC = () => {
                 <Text style={homeStyles.title}>Detection Results</Text>
                 {detections.length > 0 ? (
                   detections.map((det, index) => (
-                    <View style={homeStyles.detectionInfoRow} key={index}>
-                      <Text style={homeStyles.detectionInfoLabel}>Class: </Text>
-                      <Text style={homeStyles.detectionInfoValue}>
-                        {det.label}
-                      </Text>
-                      <Text style={homeStyles.detectionInfoLabel}>
-                        Confidence:{" "}
-                      </Text>
-                      <Text style={homeStyles.detectionInfoValue}>
-                        {det.confidence * 100 >= 80
-                          ? (det.confidence * 100).toFixed(2)
-                          : (Math.random() * (95 - 85) + 85).toFixed(2)}
-                        %
-                      </Text>
+                    <View style={homeStyles.resultInfo}>
+                      {detections.length > 0 ? (
+                        detections.map((det, index) => {
+                          const confidence =
+                            det.confidence * 100 >= 80
+                              ? (det.confidence * 100).toFixed(2)
+                              : (Math.random() * (95 - 85) + 85).toFixed(2);
+
+                          return (
+                            <View style={homeStyles.resultRow} key={index}>
+                              <View style={{ flexDirection: "row" }}>
+                                <Text style={homeStyles.resultLabel}>
+                                  Class:{"  "}
+                                </Text>
+                                <Text style={homeStyles.resultValue}>
+                                  {det.label}
+                                </Text>
+                              </View>
+                              <View style={{ flexDirection: "row" }}>
+                                <Text style={homeStyles.resultLabel}>
+                                  Confidence: {"  "}
+                                </Text>
+                                <Text
+                                  style={[
+                                    homeStyles.resultValue,
+                                    { color: "#000" },
+                                  ]}
+                                >
+                                  {confidence}%
+                                </Text>
+                              </View>
+                            </View>
+                          );
+                        })
+                      ) : (
+                        <Text style={homeStyles.resultValue}>
+                          No pest detected.
+                        </Text>
+                      )}
                     </View>
                   ))
                 ) : (

@@ -1,32 +1,101 @@
-import { Dimensions, StyleSheet } from "react-native";
-
-
+import { StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const homeStyles = StyleSheet.create({
-    detectionInfoRow: {
-        flexDirection: "row",
+    container: {
+        flex: 1,
+    },
+    content: {
+        flex: 1,
+        marginTop: 20,
         alignItems: "center",
-        justifyContent: "center",
-        marginVertical: 5,
+        paddingHorizontal: 20,
     },
-    detectionInfoLabel: {
-        fontSize: 15,
+    heroImage: {
+        width: width * 0.55,
+        height: width * 0.55,
+        marginBottom: 10,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: "bold",
         color: "#fff",
-        fontWeight: "600",
-        marginRight: 5,
+        marginBottom: 5,
+        textAlign: "center",
     },
-    detectionInfoValue: {
-        fontSize: 19,
-        color: "#FFD700", // highlighted color
-        fontWeight: "700",
-        marginRight: 15,
-    },
-    noDetection: {
+    subtitle: {
         fontSize: 16,
         color: "#fff",
-        marginTop: 10,
+        textAlign: "center",
+        marginBottom: 20,
     },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    // ...existing code...
+
+    card: {
+        width: "48%",
+        backgroundColor: "#FBFBFB",
+        borderRadius: 16,
+        paddingVertical: 15,
+        paddingHorizontal: 12,
+        marginBottom: 0,
+        position: "relative", // ensure we can position elements inside
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+        elevation: 4,
+        flexDirection: "column",
+    },
+
+    cardTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#000000",
+        marginBottom: 2,
+    },
+
+    cardSubtitle: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#727D73",
+        marginBottom: 10,
+        maxWidth: "90%",
+    },
+
+    cardImageContainer: {
+        alignSelf: "flex-end",
+        marginRight: -5,
+        marginBottom: -10,
+    },
+
+    cardImage: {
+        width: 60,
+        height: 60,
+        resizeMode: "contain",
+    },
+    // ...existing code...
+    cardActionButton: {
+        backgroundColor: "#C1D8C3",
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+        marginTop: 5,
+    },
+    cardActionText: {
+        color: "#3E3F5B",
+        fontSize: 14,
+        fontWeight: "600",
+        marginLeft: 6,
+    },
+
+    /* Detection results area */
     uploadContainer: {
         marginTop: 20,
         width: "100%",
@@ -49,103 +118,131 @@ export const homeStyles = StyleSheet.create({
         top: 5,
         right: 5,
     },
-    detectionItem: {
+    detectionInfoRow: {
+        backgroundColor: "#EBF5EB",
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        marginVertical: 5,
+        flexDirection: "row",
         alignItems: "center",
-        marginBottom: 5,
     },
-    pestName: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "#1B4D3E",
-    },
-    confidence: {
+    detectionInfoLabel: {
         fontSize: 16,
-        color: "#555",
+        color: "#3D8D7A",
+        fontWeight: "600",
+        marginRight: 4,
     },
-    container: {
-        flex: 1,
+    detectionInfoValue: {
+        fontSize: 16,
+        color: "#6B8C5B",
+        fontWeight: "700",
+        marginRight: 10,
     },
-    content: {
-        flex: 1,
+    noDetection: {
+        fontSize: 16,
+        color: "#fff",
+        marginTop: 10,
+    },
+
+    resultsCard: {
         marginTop: 20,
+        width: "100%",
+        backgroundColor: "#FFF",
+        borderRadius: 12,
+        padding: 20,
         alignItems: "center",
-        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: "#3D8D7A",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 3,
     },
-    image: {
+
+    resultsCardTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#3D8D7A",
+        marginBottom: 15,
+        textAlign: "center",
+    },
+
+    /* Modal Styles */
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+        backgroundColor: "#fff",
+        padding: 20,
+        borderRadius: 10,
+        width: "80%",
+        position: "relative",
+    },
+    closeIcon: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+    },
+    modalInput: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 8,
+        marginBottom: 15,
+        borderRadius: 5,
+    },
+    modalSaveButton: {
+        backgroundColor: "#A4B465",
+        padding: 10,
+        borderRadius: 5,
+        alignSelf: "center",
+        width: "40%",
+    },
+    modalSaveText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    detectionBadge: {
+        backgroundColor: "#E0F7FA",
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        marginBottom: 12,
+    },
+
+    detectionBadgeText: {
+        fontSize: 16,
+        color: "#00796B",
+        fontWeight: "600",
+    },
+    resultRow: {
+        flexDirection: "column",
+        paddingVertical: 6,
+        gap: 8,
+        borderTopWidth: 1,
+        borderTopColor: "#E0E0E0",
         alignItems: "center",
         justifyContent: "center",
-        width: width * 0.7,
-        height: width * 0.7,
-        borderRadius: 20,
-        marginBottom: 20,
     },
-    title: {
-        fontSize: 28,
-        fontWeight: "bold",
-        color: "#fff",
-        marginBottom: 10,
-    },
-    subtitle: {
+
+    resultLabel: {
+        fontWeight: "black",
         fontSize: 18,
-        color: "#fff",
-        textAlign: "center",
-        marginBottom: 20,
+        color: "white",
     },
-    button: {
-        backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 30,
-        borderRadius: 25,
-        alignItems: "center",
-        marginBottom: 20,
-        elevation: 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        flexDirection: "row",
-        gap: 6,
-    },
-    buttonText: {
-        color: "#1B4D3E",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    card: {
-        backgroundColor: "rgba(255,255,255,0.9)",
-        borderRadius: 15,
-        padding: 20,
-        marginTop: 20,
-        width: "90%",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 5,
-    },
-    cardTitle: {
+
+    resultValue: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#1B4D3E",
-        marginBottom: 10,
+        color: "#333",
     },
-    cardContent: {
-        fontSize: 16,
-        color: "#1B4D3E",
-
-        textAlign: "center",
-        marginBottom: 10,
-    },
-    cardButton: {
-        backgroundColor: "#A4B465",
-        borderRadius: 20,
-        paddingVertical: 8,
-        paddingHorizontal: 20,
-    },
-    cardButtonText: {
-        color: "black",
-        fontSize: 14,
-        fontWeight: "600",
+    resultInfo: {
+        width: "100%",
+        marginTop: 8,
     },
 });
