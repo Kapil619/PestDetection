@@ -101,22 +101,24 @@ export const homeStyles = StyleSheet.create({
         width: "100%",
         alignItems: "center",
     },
+    imagePair: {
+        flexDirection: "row",
+        justifyContent: "center",
+        width: "100%",
+    },
     imageWrapper: {
-        width: 250,
-        height: 180,
+        width: 160,
+        height: 160,
         borderRadius: 10,
         overflow: "hidden",
         position: "relative",
-        marginBottom: 10,
     },
     uploadedImage: {
         width: "100%",
         height: "100%",
     },
     crossIcon: {
-        position: "absolute",
-        top: 5,
-        right: 5,
+        justifyContent: "center",
     },
     detectionInfoRow: {
         backgroundColor: "#EBF5EB",
@@ -187,6 +189,7 @@ export const homeStyles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
+        zIndex: 3,
     },
     modalInput: {
         borderWidth: 1,
@@ -207,42 +210,54 @@ export const homeStyles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
     },
-    detectionBadge: {
-        backgroundColor: "#E0F7FA",
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 20,
-        marginBottom: 12,
-    },
 
-    detectionBadgeText: {
-        fontSize: 16,
-        color: "#00796B",
-        fontWeight: "600",
-    },
-    resultRow: {
-        flexDirection: "column",
-        paddingVertical: 6,
-        gap: 8,
-        borderTopWidth: 1,
-        borderTopColor: "#E0E0E0",
-        alignItems: "center",
-        justifyContent: "center",
-    },
 
-    resultLabel: {
-        fontWeight: "black",
-        fontSize: 18,
-        color: "white",
-    },
-
-    resultValue: {
+    detectionResultsHeader: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#333",
+        color: "#fff",
+        marginVertical: 10,
     },
-    resultInfo: {
-        width: "100%",
-        marginTop: 8,
+
+    detectionCard: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "90%",
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        padding: 12,
+        elevation: 2,
+
+    },
+    detectionHighlight: {
+        fontSize: 22,
+        fontWeight: "700",
+        color: "#3D8D7A",
+        marginBottom: 4,
+    },
+    smallLabel: {
+        fontSize: 16,
+        color: "#555",
+    },
+    boldValue: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "#283618",
+    },
+    noPestsText: {
+        fontSize: 16,
+        color: "#666",
+        textAlign: "center",
+    },
+    placeholderWrapper: {
+        backgroundColor: "#e6e6e6",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    placeholderText: {
+        color: "#666",
+        fontSize: 14,
+        fontStyle: "italic",
     },
 });

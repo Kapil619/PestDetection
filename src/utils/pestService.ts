@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import { Detection } from "./types";
 
 export let uploadBaseUrl = "http://192.168.1.33:5000";
@@ -15,7 +15,10 @@ export function setCaptureBaseUrl(urlDigits: string) {
     captureBaseUrl = "http://" + urlDigits;
 }
 
-export async function uploadImageService(uri: string): Promise<Detection[]> {
+export async function uploadImageService(uri: string): Promise<{
+    detections: Detection[];
+    imageUrl: string;
+}> {
     try {
         const formData = new FormData();
         formData.append("image", {
@@ -28,16 +31,20 @@ export async function uploadImageService(uri: string): Promise<Detection[]> {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
-        const data = response.data;
-        console.log("uploadImageService Response:", data);
-        const detectedPests = data.detections
-            .filter((det: any) => det.confidence >= 0.2)
-            .map((det: any) => ({ label: det.label, confidence: det.confidence }));
-
-        if (detectedPests.length === 0) {
-            Alert.alert("No pest detected!");
+        if (response.data.error) {
+            throw new Error(response.data.error);
         }
-        return detectedPests;
+
+        // Destructure the JSON response
+        const { detections, image_url } = response.data;
+        // Filter out low-confidence detections
+        const filtered = detections.filter((det: Detection) => det.confidence >= 0.1);
+        if (filtered.length === 0) {
+            console.log("No pest detected!");
+            ToastAndroid.show("No pest detected!", ToastAndroid.SHORT,);
+        }
+        // Return both the detection array + the URL to the bounding-box image
+        return { detections: filtered, imageUrl: `http://192.168.1.33:5000${image_url}` };
     } catch (error) {
         console.error("Upload failed:", error);
         Alert.alert("Error", "Please configure the URL properly.");

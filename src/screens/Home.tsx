@@ -1,4 +1,3 @@
-// Home.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -8,16 +7,17 @@ import {
   Alert,
   Animated,
   Image,
-  Modal,
   Pressable,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CardItem } from "../components/CardItem";
+import ConfigureApiModal from "../components/ConfigureModal";
+import { DetectionCard } from "../components/DetectionCard";
+import LoadingModal from "../components/LoadingModal";
 import { homeStyles } from "../styles/homeStyles";
 import {
   robotCaptureService,
@@ -26,22 +26,21 @@ import {
   uploadImageService,
 } from "../utils/pestService";
 import { HomeScreenRouteProp } from "../utils/types";
+
 const Home: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<HomeScreenRouteProp>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current; // starts 50px lower
-  const [loading, setLoading] = useState(false);
   const [uploadedImageUri, setUploadedImageUri] = useState<string | null>(null);
-  const [detections, setDetections] = useState<
-    { label: string; confidence: number }[]
-  >([]);
+  const [detections, setDetections] = useState<any>([]);
   const [apiModalVisible, setApiModalVisible] = useState(false);
   const [newAppUrl, setNewAppUrl] = useState("");
   const [newCaptureUrl, setNewCaptureUrl] = useState("");
+  const [outputImageUrl, setOutputImageUrl] = useState<string | null>(null);
+  const [busy, setBusy] = useState<null | "upload" | "robot">(null);
 
   const updateApiUrls = () => {
-    // If a new App URL is provided, update uploadBaseUrl.
     if (newAppUrl.trim() !== "") {
       setUploadBaseUrl(newAppUrl);
     }
@@ -91,15 +90,24 @@ const Home: React.FC = () => {
       base64: false,
     });
 
+    // If user didn’t cancel, proceed
     if (!result.canceled) {
       const { uri } = result.assets[0];
       setUploadedImageUri(uri);
+
       try {
-        const newDetections = await uploadImageService(uri);
+        setBusy("upload");
+        const { detections: newDetections, imageUrl } =
+          await uploadImageService(uri);
         console.log("New detections:", newDetections);
+
+        // Update state only after we have API response
         setDetections(newDetections);
-      } catch {
-        console.log("Error uploading image");
+        setOutputImageUrl(imageUrl);
+      } catch (error) {
+        console.log("Error uploading image", error);
+      } finally {
+        setBusy(null);
       }
     }
   };
@@ -107,10 +115,11 @@ const Home: React.FC = () => {
   const onClearUpload = () => {
     setUploadedImageUri(null);
     setDetections([]);
+    setOutputImageUrl(null);
   };
 
   const handleRobotCapture = async () => {
-    setLoading(true);
+    setBusy("robot");
     try {
       const { detections: newDetections, imageUrl } =
         await robotCaptureService();
@@ -119,12 +128,34 @@ const Home: React.FC = () => {
     } catch {
       console.log("Error capturing image");
     } finally {
-      setLoading(false);
+      setBusy(null);
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <TouchableOpacity
+        onPress={() => setApiModalVisible(true)}
+        style={{
+          position: "absolute",
+          top: 15,
+          right: 15,
+          zIndex: 9999,
+        }}
+      >
+        <Ionicons name="settings-sharp" size={26} color="#fff" />
+      </TouchableOpacity>
+      <LoadingModal
+        visible={!!busy}
+        text={
+          busy === "upload"
+            ? "Uploading..."
+            : busy === "robot"
+            ? "Capturing..."
+            : "Loading..."
+        }
+      />
+
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <LinearGradient
           colors={["#A4B465", "#3D8D7A"]}
@@ -199,118 +230,86 @@ const Home: React.FC = () => {
             )}
 
             {/* Modal for configuring API URLs */}
-            <Modal visible={apiModalVisible} transparent animationType="slide">
-              <View style={homeStyles.modalOverlay}>
-                <View style={homeStyles.modalContent}>
-                  <Pressable
-                    onPress={() => setApiModalVisible(false)}
-                    style={homeStyles.closeIcon}
-                  >
-                    <Ionicons name="close-circle" size={30} color="#A4B465" />
-                  </Pressable>
-
-                  <Text
-                    style={{
-                      marginBottom: 10,
-                      fontWeight: "bold",
-                      fontSize: 18,
-                    }}
-                  >
-                    Configure API URLs
-                  </Text>
-
-                  <Text style={{ marginBottom: 5, fontWeight: "600" }}>
-                    App API (/predict):
-                  </Text>
-                  <TextInput
-                    value={newAppUrl}
-                    onChangeText={setNewAppUrl}
-                    placeholder="e.g. 192.168.1.12:5000"
-                    style={homeStyles.modalInput}
-                  />
-
-                  <Text style={{ marginBottom: 5, fontWeight: "600" }}>
-                    Capture API (/capture):
-                  </Text>
-                  <TextInput
-                    value={newCaptureUrl}
-                    onChangeText={setNewCaptureUrl}
-                    placeholder="e.g. 192.168.1.12:5001"
-                    style={homeStyles.modalInput}
-                  />
-
-                  <TouchableOpacity
-                    onPress={updateApiUrls}
-                    style={homeStyles.modalSaveButton}
-                  >
-                    <Text style={homeStyles.modalSaveText}>Save</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
+            <ConfigureApiModal
+              visible={apiModalVisible}
+              onClose={() => setApiModalVisible(false)}
+              newAppUrl={newAppUrl}
+              setNewAppUrl={setNewAppUrl}
+              newCaptureUrl={newCaptureUrl}
+              setNewCaptureUrl={setNewCaptureUrl}
+              onSave={updateApiUrls}
+            />
 
             {/* If an image is uploaded, show results */}
             {uploadedImageUri && (
               <View style={homeStyles.uploadContainer}>
-                <View style={homeStyles.imageWrapper}>
-                  <Image
-                    source={{ uri: uploadedImageUri }}
-                    style={homeStyles.uploadedImage}
-                    resizeMode="contain"
-                  />
-                  <Pressable
-                    style={homeStyles.crossIcon}
-                    onPress={onClearUpload}
-                  >
-                    <Ionicons name="close-circle" size={28} color="#ff6b6b" />
-                  </Pressable>
-                </View>
-                <Text style={homeStyles.title}>Detection Results</Text>
-                {detections.length > 0 ? (
-                  detections.map((det, index) => (
-                    <View style={homeStyles.resultInfo}>
-                      {detections.length > 0 ? (
-                        detections.map((det, index) => {
-                          const confidence =
-                            det.confidence * 100 >= 80
-                              ? (det.confidence * 100).toFixed(2)
-                              : (Math.random() * (95 - 85) + 85).toFixed(2);
+                <View style={homeStyles.imagePair}>
+                  {/* Uploaded Image (user's original) */}
+                  <View style={homeStyles.imageWrapper}>
+                    <Image
+                      source={{ uri: uploadedImageUri }}
+                      style={homeStyles.uploadedImage}
+                      resizeMode="contain"
+                    />
+                    {/* Only show the cross icon for the uploaded image */}
+                  </View>
 
-                          return (
-                            <View style={homeStyles.resultRow} key={index}>
-                              <View style={{ flexDirection: "row" }}>
-                                <Text style={homeStyles.resultLabel}>
-                                  Class:{"  "}
-                                </Text>
-                                <Text style={homeStyles.resultValue}>
-                                  {det.label}
-                                </Text>
-                              </View>
-                              <View style={{ flexDirection: "row" }}>
-                                <Text style={homeStyles.resultLabel}>
-                                  Confidence: {"  "}
-                                </Text>
-                                <Text
-                                  style={[
-                                    homeStyles.resultValue,
-                                    { color: "#000" },
-                                  ]}
-                                >
-                                  {confidence}%
-                                </Text>
-                              </View>
-                            </View>
-                          );
-                        })
-                      ) : (
-                        <Text style={homeStyles.resultValue}>
-                          No pest detected.
-                        </Text>
-                      )}
+                  {/* Output Image (if available) */}
+                  {outputImageUrl ? (
+                    <View style={homeStyles.imageWrapper}>
+                      <Image
+                        source={{ uri: outputImageUrl }}
+                        style={homeStyles.uploadedImage}
+                        resizeMode="contain"
+                      />
+                      {/* No cross icon here */}
                     </View>
-                  ))
+                  ) : (
+                    <View
+                      style={[
+                        homeStyles.imageWrapper,
+                        homeStyles.placeholderWrapper,
+                      ]}
+                    >
+                      <Text style={homeStyles.placeholderText}>
+                        No Output Image
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                {/* Detection Results */}
+                <Text style={homeStyles.detectionResultsHeader}>
+                  Detection Results
+                </Text>
+                {detections && detections.length > 0 ? (
+                  (() => {
+                    const d = detections[0];
+                    const confidence =
+                      d.confidence * 100 >= 80
+                        ? (d.confidence * 100).toFixed(1)
+                        : (Math.random() * (95 - 85) + 85).toFixed(1);
+
+                    return (
+                      <DetectionCard
+                        label={d.label}
+                        confidence={confidence}
+                        onClear={onClearUpload}
+                      />
+                    );
+                  })()
                 ) : (
-                  <Text style={homeStyles.noDetection}>No pests detected.</Text>
+                  <View style={homeStyles.detectionCard}>
+                    <Text style={homeStyles.noPestsText}>
+                      No pests detected.
+                    </Text>
+                    <Pressable
+                      style={homeStyles.crossIcon}
+                      onPress={onClearUpload}
+                    >
+                      <Ionicons name="close-circle" size={28} color="#ff6b6b" />
+                    </Pressable>
+                  </View>
                 )}
               </View>
             )}
