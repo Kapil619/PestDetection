@@ -2,9 +2,9 @@ import axios from "axios";
 import { Alert, ToastAndroid } from "react-native";
 import { Detection } from "./types";
 
-export let uploadBaseUrl = "http://192.168.1.33:5000";
-export let captureBaseUrl = "http://65.1.91.195:5001";
-export const liveFeedUrl = "http://192.168.1.34:5001/video_feed";
+export let uploadBaseUrl = "http://192.168.1.33:5000"; // URL for the modal
+export let captureBaseUrl = "http://192.168.1.33:5001"; // URL for capture service
+export const liveFeedUrl = "http://192.168.1.34:5001/video_feed"; // URL for live feed
 
 
 

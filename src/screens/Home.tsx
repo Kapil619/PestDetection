@@ -221,7 +221,9 @@ const Home: React.FC = () => {
                     subtitle="REALTIME VIDEO"
                     iconFamily="Entypo"
                     iconName="tv"
-                    onPress={handleRobotCapture}
+                    onPress={() => {
+                      navigation.navigate("LiveFeed");
+                    }}
                     imageSource={require("../../assets/live.png")}
                     btnText="BEGIN"
                   />
