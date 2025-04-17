@@ -62,7 +62,7 @@ export async function robotCaptureService(): Promise<{
         console.log("robotCaptureService Response:", data);
 
         const detections = data.detections
-            .filter((det: any) => det.confidence >= 0.4)
+            .filter((det: any) => det.confidence >= 0.1)
             .map((det: any) => ({ label: det.label, confidence: det.confidence }));
 
         const uniqueImageUrl = `${data.image_url}?t=${new Date().getTime()}`;
@@ -89,7 +89,7 @@ export async function predictImage(uri: string): Promise<Detection[]> {
         console.log("predictImage Response:", response.data);
 
         const detectedPests = response.data.detections
-            .filter((det: any) => det.confidence >= 0.4)
+            .filter((det: any) => det.confidence >= 0.1)
             .map((det: any) => ({
                 label: det.label,
                 confidence: det.confidence,
