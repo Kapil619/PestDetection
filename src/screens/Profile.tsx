@@ -75,11 +75,13 @@ const styles = StyleSheet.create({
     flex: 0.3,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 10,
   },
   headerTitle: {
     fontSize: 32,
     fontWeight: "bold",
     color: "#fff",
+    marginBottom: 10,
   },
   cardContainer: {
     flex: 0.7,
