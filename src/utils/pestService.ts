@@ -2,9 +2,9 @@ import axios from "axios";
 import { Alert, ToastAndroid } from "react-native";
 import { Detection } from "./types";
 
-export let uploadBaseUrl = "http://192.168.1.33:5000"; // URL for the modal
-export let captureBaseUrl = "http://192.168.1.33:5001"; // URL for capture service
-export const liveFeedUrl = "http://192.168.1.34:5001/video_feed"; // URL for live feed
+export let uploadBaseUrl = "http://65.1.91.195:5000"; // URL for the modal
+export let captureBaseUrl = "http://65.1.91.195:5001"; // URL for capture service
+export const liveFeedUrl = "http://65.1.91.195:5001/video_feed"; // URL for live feed
 
 
 
@@ -44,7 +44,7 @@ export async function uploadImageService(uri: string): Promise<{
             ToastAndroid.show("No pest detected!", ToastAndroid.SHORT,);
         }
         // Return both the detection array + the URL to the bounding-box image
-        return { detections: filtered, imageUrl: `http://192.168.1.33:5000${image_url}` };
+        return { detections: filtered, imageUrl: `http://65.1.91.195:5001${image_url}` };
     } catch (error) {
         console.error("Upload failed:", error);
         Alert.alert("Error", "Please configure the URL properly.");
