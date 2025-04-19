@@ -3,8 +3,8 @@ import { Alert, ToastAndroid } from "react-native";
 import { Detection } from "./types";
 
 export let uploadBaseUrl = "http://65.1.91.195:5000"; // URL for the modal
-export let captureBaseUrl = "http://192.168.1.2:5001"; // URL for capture service
-export let liveFeedUrl = "http://192.168.1.2:5001/video_feed"; // URL for live feed
+export let captureBaseUrl = "http://10.26.175.63:5001"; // URL for capture service
+export let liveFeedUrl = "http://10.26.175.63:5001/video_feed"; // URL for live feed
 
 export function setUploadBaseUrl(urlDigits: string) {
     uploadBaseUrl = "http://" + urlDigits;
