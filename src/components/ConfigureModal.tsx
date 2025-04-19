@@ -13,20 +13,20 @@ import { homeStyles } from "../styles/homeStyles";
 type ConfigureApiModalProps = {
   visible: boolean;
   onClose: () => void;
-  newAppUrl: string;
-  setNewAppUrl: (url: string) => void;
   newCaptureUrl: string;
   setNewCaptureUrl: (url: string) => void;
+  newLiveFeedUrl: string;
+  setNewLiveFeedUrl: (url: string) => void;
   onSave: () => void;
 };
 
 const ConfigureApiModal: React.FC<ConfigureApiModalProps> = ({
   visible,
   onClose,
-  newAppUrl,
-  setNewAppUrl,
   newCaptureUrl,
   setNewCaptureUrl,
+  newLiveFeedUrl,
+  setNewLiveFeedUrl,
   onSave,
 }) => {
   return (
@@ -42,22 +42,22 @@ const ConfigureApiModal: React.FC<ConfigureApiModalProps> = ({
           </Text>
 
           <Text style={{ marginBottom: 5, fontWeight: "600" }}>
-            App API (/predict):
-          </Text>
-          <TextInput
-            value={newAppUrl}
-            onChangeText={setNewAppUrl}
-            placeholder="e.g. 192.168.1.12:5000"
-            style={homeStyles.modalInput}
-          />
-
-          <Text style={{ marginBottom: 5, fontWeight: "600" }}>
             Capture API (/capture):
           </Text>
           <TextInput
             value={newCaptureUrl}
             onChangeText={setNewCaptureUrl}
             placeholder="e.g. 192.168.1.12:5001"
+            style={homeStyles.modalInput}
+          />
+
+          <Text style={{ marginBottom: 5, fontWeight: "600" }}>
+            Live Feed URL:
+          </Text>
+          <TextInput
+            value={newLiveFeedUrl}
+            onChangeText={setNewLiveFeedUrl}
+            placeholder="e.g. http://192.168.1.2:5001/video_feed"
             style={homeStyles.modalInput}
           />
 

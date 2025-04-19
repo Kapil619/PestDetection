@@ -24,6 +24,8 @@ import {
   setCaptureBaseUrl,
   setUploadBaseUrl,
   uploadImageService,
+  liveFeedUrl,
+  setLiveFeedUrl,
 } from "../utils/pestService";
 import { HomeScreenRouteProp } from "../utils/types";
 
@@ -39,10 +41,12 @@ const Home: React.FC = () => {
   const [newCaptureUrl, setNewCaptureUrl] = useState("");
   const [outputImageUrl, setOutputImageUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState<null | "upload" | "robot">(null);
+  const [liveFeedUrlState, setLiveFeedUrlState] = useState(liveFeedUrl); // import liveFeedUrl from pestService
+  const [newLiveFeedUrl, setNewLiveFeedUrl] = useState(liveFeedUrl);
 
   const updateApiUrls = () => {
-    if (newAppUrl.trim() !== "") {
-      setUploadBaseUrl(newAppUrl);
+    if (newLiveFeedUrl.trim() !== "") {
+      setLiveFeedUrl(newLiveFeedUrl);
     }
     if (newCaptureUrl.trim() !== "") {
       setCaptureBaseUrl(newCaptureUrl);
@@ -235,8 +239,8 @@ const Home: React.FC = () => {
             <ConfigureApiModal
               visible={apiModalVisible}
               onClose={() => setApiModalVisible(false)}
-              newAppUrl={newAppUrl}
-              setNewAppUrl={setNewAppUrl}
+              newLiveFeedUrl={newLiveFeedUrl}
+              setNewLiveFeedUrl={setNewLiveFeedUrl}
               newCaptureUrl={newCaptureUrl}
               setNewCaptureUrl={setNewCaptureUrl}
               onSave={updateApiUrls}
