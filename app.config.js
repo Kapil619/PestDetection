@@ -58,6 +58,12 @@ export default {
             "PestIdentification wants to accesses your photos to capture the images.",
         },
       ],
+      [
+        "expo-build-properties",
+        {
+          android: { usesCleartextTraffic: true },
+        },
+      ],
     ],
     runtimeVersion: {
       policy: "appVersion",
