@@ -7,8 +7,9 @@ PestDetection is a mobile application designed to help farmers and agricultural 
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/8951c266-849c-45ce-bed2-675bc822b420" width="200" alt="Login Screen" />
-  <img src="https://github.com/user-attachments/assets/eda387d5-0fd5-482f-a528-597601f9a122" width="200" alt="Home Screen" />
+  <img src="https://github.com/user-attachments/assets/7a8a5b94-6197-4cbe-a9e6-9aad7563885e" width="200" alt="Home Screen" />
   <img src="https://github.com/user-attachments/assets/58bc1167-c629-4090-afae-1eba8cb34953" width="200" alt="Camera Screen" />
+<img src="https://github.com/user-attachments/assets/a17a62ba-14af-4188-b9bd-445dc15dab11" width="200" alt="Output Screen" />
 </p>
 
 ## ✨ Key Features
